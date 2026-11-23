@@ -10,11 +10,20 @@ const places = [
 ];
 
 function App() {
+  const [step, setStep] = useState(0);
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [time, setTime] = useState("");
+
+  const hours = Array.from({ length: 24 }, (_, i) =>
+    String(i).padStart(2, "0")
+  );
+
+  const minutes = Array.from({ length: 6 }, (_, i) =>
+    String(i * 10).padStart(2, "0")
+  );
 
 
   async function handleSubmit() {
@@ -53,21 +62,46 @@ function App() {
 
 
   if (submitted) {
-    return (
-      <div className="container">
-        <div className="card">
-          <h1>It's a date! ❤️</h1>
-          <p>I'm so excited to spend time with you!</p>
+    if (step === 0) {
+      return (
+        <div className="container">
+          <div className="card opening-screen">
+            <div className="envelope">💌</div>
 
-          <div className="result">
-            <p>📍 {place}</p>
-            <p>📅 {date}</p>
-            <p>🕒 {time}</p>
-            <p>💌 {message}</p>
+            <h1>You have a special invitation</h1>
+
+            <p>
+              Someone has something special to ask you...
+            </p>
+
+            <button
+              className="submit"
+              onClick={() => setStep(1)}
+            >
+              Open my invitation ❤️
+            </button>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    if (submitted) {
+      return (
+        <div className="container">
+          <div className="card">
+            <h1>It's a date! ❤️</h1>
+            <p>I'm so excited to spend time with you!</p>
+
+            <div className="result">
+              <p>📍 {place}</p>
+              <p>📅 {date}</p>
+              <p>🕒 {time}</p>
+              <p>💌 {message}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 
   return (
@@ -104,11 +138,39 @@ function App() {
         />
 
         <h3>Choose a time 🕒</h3>
-        <input
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-        />
+        <div className="time-picker">
+          <select
+            value={time.split(":")[0] || ""}
+            onChange={(e) =>
+              setTime(`${e.target.value}:${time.split(":")[1] || "00"}`)
+            }
+          >
+            <option value="">Hour</option>
+
+            {hours.map((hour) => (
+              <option key={hour} value={hour}>
+                {hour}
+              </option>
+            ))}
+          </select>
+
+          <span>:</span>
+
+          <select
+            value={time.split(":")[1] || ""}
+            onChange={(e) =>
+              setTime(`${time.split(":")[0] || "00"}:${e.target.value}`)
+            }
+          >
+            <option value="">Min</option>
+
+            {minutes.map((minute) => (
+              <option key={minute} value={minute}>
+                {minute}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <h3>Something you'd like to tell me? 💌</h3>
         <textarea

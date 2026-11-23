@@ -1,136 +1,217 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  margin-bottom: 20px;
-  font-weight: 500;
-  letter-spacing: 20px;
-}
-
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(248, 220, 228, 0.9), transparent 35%),
+    radial-gradient(circle at 90% 85%, rgba(233, 163, 183, 0.25), transparent 35%),
+    #fff0f3;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px 15px;
+  padding: 40px 20px;
 }
 
 .card {
-  background: white;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 249, 246, 0.95);
   width: 100%;
-  max-width: 500px;
-  padding: 35px;
-  border-radius: 25px;
+  max-width: 540px;
+  padding: 45px 40px;
+  border: 1px solid rgba(233, 163, 183, 0.35);
+  border-radius: 30px;
   text-align: center;
-  box-shadow: 0 10px 40px #00000020;
+  box-shadow: 0 20px 60px rgba(141, 52, 80, 0.12);
+  animation: cardAppear 0.8s ease both;
+}
+
+.card::before {
+  content: "♡";
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  color: #f2d5df;
+  font-size: 55px;
+  transform: rotate(15deg);
+  pointer-events: none;
 }
 
 .heart {
   font-size: 55px;
-  margin-bottom: 15px;
-  animation: heartbeat 1.2s infinite;
+  margin-bottom: 20px;
+  animation: heartbeat 1.5s infinite;
 }
 
 h1 {
-  color: #e75480;
-  margin-bottom: 12px;
+  font-family: 'Playfair Display', serif;
+  color: #8d3450;
+  font-size: clamp(38px, 7vw, 52px);
+  line-height: 1.15;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 p {
-  color: #888;
+  color: #917481;
+  line-height: 1.6;
   margin-bottom: 20px;
 }
 
 h3 {
-  color: #d94f83;
-  margin: 25px 0 15px;
+  font-family: 'Playfair Display', serif;
+  color: #8d3450;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 30px 0 16px;
 }
 
 .places {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
 .place {
-  background: #fff0f5;
-  border: 2px solid transparent;
-  border-radius: 15px;
-  padding: 18px 10px;
-  cursor: pointer;
+  background: #fff0f3;
+  border: 1.5px solid #f2d5df;
+  border-radius: 18px;
+  padding: 20px 12px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
-  color: #d94f83;
+  color: #8d3450;
+  transition: all 0.3s ease;
 }
 
-.place span {
-  font-size: 28px;
-}
-
-.place small {
-  color: #999;
+.place:hover {
+  transform: translateY(-4px);
+  border-color: #e9a3b7;
+  box-shadow: 0 8px 20px rgba(141, 52, 80, 0.09);
 }
 
 .place.active {
-  border-color: #e75480;
-  background: #ffe0eb;
+  border-color: #c65b7c;
+  background: #f8dce4;
+  box-shadow: 0 5px 18px rgba(198, 91, 124, 0.15);
+  transform: translateY(-2px);
+}
+
+.place span {
+  font-size: 30px;
+}
+
+.place strong {
+  font-size: 15px;
+}
+
+.place small {
+  color: #a58a96;
+  font-size: 12px;
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 13px;
-  border: 1px solid #ffc0cb;
-  border-radius: 10px;
+  padding: 15px 16px;
+  border: 1.5px solid #f2d5df;
+  border-radius: 14px;
   outline: none;
+  background: #fff;
+  color: #71364d;
   font-size: 15px;
+  transition: all 0.25s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #c65b7c;
+  box-shadow: 0 0 0 4px rgba(198, 91, 124, 0.09);
 }
 
 textarea {
   resize: vertical;
-  min-height: 90px;
+  min-height: 110px;
 }
 
 .submit {
   width: 100%;
-  margin-top: 25px;
-  padding: 15px;
+  margin-top: 28px;
+  padding: 17px;
   border: none;
   border-radius: 30px;
-  background: #e75480;
+  background: linear-gradient(135deg, #c65b7c, #8d3450);
   color: white;
   font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(141, 52, 80, 0.2);
+  transition: all 0.3s ease;
 }
 
 .submit:hover {
-  background: #d6336c;
-  transform: scale(1.03);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(141, 52, 80, 0.3);
+}
+
+.submit:active {
+  transform: scale(0.98);
 }
 
 .result {
-  background: #fff0f5;
-  padding: 20px;
-  border-radius: 15px;
+  background: #fff0f3;
+  padding: 22px;
+  border: 1px solid #f2d5df;
+  border-radius: 18px;
   margin-top: 25px;
 }
 
 .result p {
-  color: #d94f83;
+  color: #8d3450;
+  margin-bottom: 12px;
+}
+
+.result p:last-child {
+  margin-bottom: 0;
 }
 
 @keyframes heartbeat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
   50% {
-    transform: scale(1.2);
+    transform: scale(1.15);
+  }
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 35px 22px;
+    border-radius: 24px;
+  }
+
+  .places {
+    gap: 10px;
+  }
+
+  .place {
+    padding: 16px 8px;
+  }
+
+  h3 {
+    font-size: 18px;
   }
 }
