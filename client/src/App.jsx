@@ -24,7 +24,7 @@ function App() {
     }
 
     try {
-      const response = await fetch("http://localhost:5174/send-date", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/send-date`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
