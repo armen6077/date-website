@@ -1,6 +1,6 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+
 
 const places = [
   { name: "Dinner 🍝", description: "Romantic dinner", emoji: "🍽️" },
@@ -16,6 +16,17 @@ function App() {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [time, setTime] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    setIsVisible(false);
+
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [step]);
 
   const hours = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
@@ -61,130 +72,222 @@ function App() {
   }
 
 
-  if (submitted) {
-    if (step === 0) {
-      return (
-        <div className="container">
-          <div className="card opening-screen">
-            <div className="envelope">💌</div>
+  if (step === 0) {
+    return (
+      <div className="container">
+        <div
+          className={`card opening-screen ${isVisible ? "slide-visible" : "slide-hidden"
+            }`}
+        >
+          <div className="envelope">💌</div>
+          <h1>У тебя особенное приглашение</h1>
 
-            <h1>You have a special invitation</h1>
+          <p>Кто-то хочет задать тебе кое-что особенное...</p>
 
-            <p>
-              Someone has something special to ask you...
-            </p>
+          <button
+            className="submit"
+            onClick={() => setStep(1)}
+          >
+            Открыть приглашение ❤️
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (step === 1) {
+    return (
+      <div className="container">
+        <div
+          className={`card question-screen ${isVisible ? "slide-visible" : "slide-hidden"
+            }`}
+        >
+          <div className="heart">❤️</div>
 
-            <button
-              className="submit"
-              onClick={() => setStep(1)}
+          <h1>У меня есть один вопрос...</h1>
+
+          <p>
+            Жизнь становится прекраснее, когда рядом есть особенный человек.
+          </p>
+
+          <p>
+            И мне бы очень хотелось провести с тобой немного времени.
+          </p>
+
+          <button
+            className="submit"
+            onClick={() => setStep(2)}
+          >
+            Продолжить ❤️
+          </button>
+
+        </div>
+      </div >
+    );
+  }
+  if (step === 2) {
+    return (
+      <div className="container">
+        <div
+          className={`card ${isVisible ? "slide-visible" : "slide-hidden"
+            }`}
+        >
+          <div className="heart">❤️</div>
+
+          <h1>Куда отправимся?</h1>
+
+          <p>Выбирай, как мы проведём этот вечер...</p>
+
+          <div className="places">
+            {places.map((item) => (
+              <button
+                key={item.name}
+                className={`place ${place === item.name ? "active" : ""}`}
+                onClick={() => setPlace(item.name)}
+              >
+                <span>{item.emoji}</span>
+                <strong>{item.name === "Dinner 🍝" ? "Романтический ужин" :
+                  item.name === "Coffee ☕" ? "Выпить кофе" :
+                    item.name === "Cinema 🎬" ? "Сходить в кино" :
+                      "Прогулка"}
+                </strong>
+                <small>{item.description}</small>
+              </button>
+            ))}
+          </div>
+
+          <button
+            className="submit"
+            disabled={!place}
+            onClick={() => setStep(3)}
+          >
+            Далее ❤️
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (step === 3) {
+    return (
+      <div className="container">
+        <div
+          className={`card ${isVisible ? "slide-visible" : "slide-hidden"
+            }`}
+        >
+          <div className="heart">🌹</div>
+
+          <h1>Когда встретимся?</h1>
+
+          <p>Выбери удобную для тебя дату и время ❤️</p>
+
+          <h3>Дата нашей встречи 📅</h3>
+
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+
+          <h3>Во сколько? 🕒</h3>
+
+          <div className="time-picker">
+            <select
+              value={time.split(":")[0] || ""}
+              onChange={(e) =>
+                setTime(`${e.target.value}:${time.split(":")[1] || "00"}`)
+              }
             >
-              Open my invitation ❤️
-            </button>
-          </div>
-        </div>
-      );
-    }
+              <option value="">Часы</option>
 
-    if (submitted) {
-      return (
-        <div className="container">
-          <div className="card">
-            <h1>It's a date! ❤️</h1>
-            <p>I'm so excited to spend time with you!</p>
+              {hours.map((hour) => (
+                <option key={hour} value={hour}>
+                  {hour}
+                </option>
+              ))}
+            </select>
 
-            <div className="result">
-              <p>📍 {place}</p>
-              <p>📅 {date}</p>
-              <p>🕒 {time}</p>
-              <p>💌 {message}</p>
-            </div>
+            <span>:</span>
+
+            <select
+              value={time.split(":")[1] || ""}
+              onChange={(e) =>
+                setTime(`${time.split(":")[0] || "00"}:${e.target.value}`)
+              }
+            >
+              <option value="">Минуты</option>
+
+              {minutes.map((minute) => (
+                <option key={minute} value={minute}>
+                  {minute}
+                </option>
+              ))}
+            </select>
           </div>
+
+          <button
+            className="submit"
+            disabled={!date || !time || time.startsWith("00:00")}
+            onClick={() => setStep(4)}
+          >
+            Далее ❤️
+          </button>
         </div>
-      );
-    }
+      </div>
+    );
   }
 
-  return (
-    <div className="container">
-      <div className="card">
-        <div className="heart">❤️</div>
+  if (submitted) {
 
-        <h1>Let's go
-          <br />
-          on a date!</h1>
-        <p>I have a little question for you...</p>
+    return (
+      <div className="container">
+        <div className="card final-screen">
+          <div className="heart">❤️</div>
 
-        <h3>Where would you like to go?</h3>
+          <h1>У нас будет свидание!</h1>
 
-        <div className="places">
-          {places.map((item) => (
-            <button
-              key={item.name}
-              className={`place ${place === item.name ? "active" : ""}`}
-              onClick={() => setPlace(item.name)}
-            >
-              <span>{item.emoji}</span>
-              <strong>{item.name}</strong>
-              <small>{item.description}</small>
-            </button>
-          ))}
+          <p>Я очень жду нашей встречи!</p>
+
+          <div className="result">
+            <p>📍 {place}</p>
+            <p>📅 {date}</p>
+            <p>🕒 {time}</p>
+            {message && <p>💌 {message}</p>}
+          </div>
+
+          <p>До скорой встречи! ❤️</p>
         </div>
-
-        <h3>Choose a date 📅</h3>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-
-        <h3>Choose a time 🕒</h3>
-        <div className="time-picker">
-          <select
-            value={time.split(":")[0] || ""}
-            onChange={(e) =>
-              setTime(`${e.target.value}:${time.split(":")[1] || "00"}`)
-            }
-          >
-            <option value="">Hour</option>
-
-            {hours.map((hour) => (
-              <option key={hour} value={hour}>
-                {hour}
-              </option>
-            ))}
-          </select>
-
-          <span>:</span>
-
-          <select
-            value={time.split(":")[1] || ""}
-            onChange={(e) =>
-              setTime(`${time.split(":")[0] || "00"}:${e.target.value}`)
-            }
-          >
-            <option value="">Min</option>
-
-            {minutes.map((minute) => (
-              <option key={minute} value={minute}>
-                {minute}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <h3>Something you'd like to tell me? 💌</h3>
-        <textarea
-          placeholder="Write something..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-
-        <button className="submit" onClick={handleSubmit}>
-          Send my answer ❤️
-        </button>
       </div>
-    </div>
-  );
+    );
+  }
+  if (step === 4) {
+    return (
+      <div className="container">
+        <div className="card">
+          <div className="heart">💌</div>
+
+          <h1>Несколько слов от тебя...</h1>
+
+          <p>
+            Может быть, ты хочешь что-нибудь сказать мне?
+          </p>
+
+          <textarea
+            placeholder="Напиши что-нибудь приятное..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+
+          <button
+            className="submit"
+            onClick={handleSubmit}
+          >
+            Отправить ответ ❤️
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+
 }
 
 export default App;
